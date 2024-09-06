@@ -6,13 +6,13 @@ on:
       - opened
 
 jobs:
-  create-comment-by-using-actions
-  runs-on: ubuntu-latest
-  - steps:
-    - name: Create comment
-    uses: peter-evans/create-or-update-comment@v4
-    with:
-      issue-number: {{ github.event.issue.number }}
+  create-comment-by-using-actions:
+    runs-on: ubuntu-latest
+    - steps:
+      - name: Create comment
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: {{ github.event.issue.number }}
           body: |
             This is a multi-line test comment
             - With GitHub **Markdown** :sparkles:
