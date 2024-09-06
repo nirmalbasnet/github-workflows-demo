@@ -5,6 +5,9 @@ on:
     type:
       - opened
 
+permissions:
+  issues: write
+
 jobs:
   create-comment-by-using-actions:
     runs-on: ubuntu-latest
