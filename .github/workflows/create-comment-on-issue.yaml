@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Create comment using github API
         run: |
-          gh api -X POST ${{ env.ISSUE_URL }} -d '{
+          gh api -X POST ${{ env.ISSUE_URL }} --data '{
             "body": "This is a multi-line test comment\n- With GitHub **Markdown** :sparkles:\n- Created by GITHUB API"
           }'
 
