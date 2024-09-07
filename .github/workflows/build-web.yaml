@@ -17,11 +17,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Traverse to web folder
-        run: cd web
+      - name: Set up node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
       - name: Install Dependencies
-        run: yarn
+        run: |
+          cd web
+          yarn
 
       - name: Build project
-        run: yarn build
+        run: |
+          cd web
+          yarn build
