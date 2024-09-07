@@ -15,7 +15,7 @@ defaults:
 
 jobs:
   build-web-project:
-    name: Build and test web project
+    name: Build web project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,5 +32,35 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Test project
+  test-web-project:
+    name: Test web project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run test
         run: yarn test
+
+  lint:
+    name: Lint the web project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn lint

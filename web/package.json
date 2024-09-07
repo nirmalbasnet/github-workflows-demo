@@ -7,7 +7,8 @@
     "build": "webpack --config webpack.config.js",
     "start": "nodemon main.js",
     "start:build": "yarn build && node dist/bundle.cjs",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "lint": "eslint . --max-warnings=0 --fix"
   },
   "imports": {
     "#routes": "./src/routes/index.js"
@@ -20,6 +21,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
     "babel-jest": "^29.7.0",
+    "eslint": "^8",
     "jest": "^29.7.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",

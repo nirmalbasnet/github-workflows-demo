@@ -10,6 +10,9 @@
   "rules": {
     "no-console": "warn",
     "no-unused-vars": "error",
-    "no-trailing-spaces": "error"
+    "no-trailing-spaces": "error",
+    "semi": "error",
+    "semi-style": ["error", "last"],
+    "no-extra-semi": "error"
   }
 }
