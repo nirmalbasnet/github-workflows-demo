@@ -7,6 +7,8 @@ import { initializeAppRoutes } from '#routes';
 
 const app = express();
 
+app.use(express.static(path.join('./', 'public')));
+
 // view engine setup
 app.set('views', path.join('./src', 'views'));
 app.set('view engine', 'jade');
