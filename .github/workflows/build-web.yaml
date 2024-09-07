@@ -1,0 +1,27 @@
+name: Build web project
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-web-project:
+    name: Build web project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Traverse to web folder
+        run: cd web
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Build project
+        run: yarn build
