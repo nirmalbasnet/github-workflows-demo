@@ -51,7 +51,7 @@ jobs:
         run: yarn test
 
   lint:
-    name: Lint the web project
+    name: Lint web project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
