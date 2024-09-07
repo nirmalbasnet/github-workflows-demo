@@ -1,23 +1,9 @@
-import express from 'express';
+import { startServer } from './server.js';
 
-import path from 'path';
+const PORT = process.env.PORT || 3000;
 
-// import routes from "@src/routes";
-import { initializeAppRoutes } from '#routes';
-
-const app = express();
-
-app.use(express.static(path.join('./', 'public')));
-
-// view engine setup
-app.set('views', path.join('./src', 'views'));
-app.set('view engine', 'jade');
-
-initializeAppRoutes(app);
-
-const PORT = 3000;
-
-app.listen(PORT, () => {
+startServer(PORT).catch((err) => {
   // eslint-disable-next-line no-console
-  console.log(`App listening on port ${PORT}`);
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });

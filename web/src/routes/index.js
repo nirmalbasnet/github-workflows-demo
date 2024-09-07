@@ -9,7 +9,7 @@ export const initializeAppRoutes = (app) => {
 
   // Catch-all route for handling 404 errors
   app.use('*', (_req, res) => {
-    res.render('error', {
+    res.status(404).render('error', {
       message: 'Seems you have lost your way',
       error: { status: 404 }
     });

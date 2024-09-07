@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "nodemon main.js",
-    "start:build": "yarn build && node dist/bundle.cjs"
+    "start:build": "yarn build && node dist/bundle.cjs",
+    "test": "jest --coverage"
   },
   "imports": {
     "#routes": "./src/routes/index.js"
@@ -16,9 +17,14 @@
     "jade": "^1.11.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
+    "supertest": "^7.0.0",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-node-externals": "^3.0.0"
