@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: ./web
+
 jobs:
   build-web-project:
     name: Build web project
@@ -23,11 +27,7 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: |
-          cd web
-          yarn
+        run: yarn
 
       - name: Build project
-        run: |
-          cd web
-          yarn build
+        run: yarn build
