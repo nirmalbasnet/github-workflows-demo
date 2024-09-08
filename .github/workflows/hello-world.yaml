@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
+  # workflow_dispatch:
 
 jobs:
   hello:
@@ -24,4 +24,3 @@ jobs:
     steps:
       - name: Echo good bye
         run: echo "Good Bye"
-    
