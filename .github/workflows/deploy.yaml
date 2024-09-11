@@ -38,11 +38,9 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const response = await github.rest.pulls.get({
+            const { data: response } = github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: ${{ github.event.inputs.pr_number }}, 
             })
-            echo "${{response}}"
-      - name: Get result
-        run: echo "${{steps.get-pull-request.outputs.result}}"
+            console.log(response)
