@@ -1,0 +1,14 @@
+name: Build and test web project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Echo hello world
+        run: echo "Hello World"
