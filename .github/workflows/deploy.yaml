@@ -9,36 +9,16 @@ on:
         type: number
 
 jobs:
-  hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Echo hello world
-        run: echo "Hello World"
-
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Get PR title
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ github.event.inputs.pr_number }}
-            });
-            console.log(`Pull Request Title: ${pr.title}`);
-
       - name: Validate PR number
         uses: actions/github-script@v7
         id: get-pull-request
         with:
           result-encoding: string
           script: |
-            const { data: response } = github.rest.pulls.get({
+            const { data: response } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: ${{ github.event.inputs.pr_number }}, 
