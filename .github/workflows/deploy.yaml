@@ -1,4 +1,4 @@
-name: Build and test web project
+name: GG
 
 on:
   workflow_dispatch:
