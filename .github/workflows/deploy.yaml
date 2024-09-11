@@ -16,8 +16,4 @@ jobs:
         id: get-pull-request
         with:
           script: >
-            # const response = github.rest.pull.get({
-            #   owner: context.repo.owner,
-            #   repo: context.repo.repo,
-            # })
             echo '${{toJSON(github.event.inputs)}}'
