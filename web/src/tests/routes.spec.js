@@ -12,7 +12,7 @@ afterAll(() => {
 });
 
 describe('Base Endpoint', () => {
-  it('should return status 200', async () => {
+  it('should return status 200 as success', async () => {
     const res = await request(app).get('/');
     expect(res.statusCode).toEqual(200);
   });
