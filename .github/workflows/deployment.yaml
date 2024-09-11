@@ -2,10 +2,10 @@ name: Create test server for PR
 
 on:
   workflow_dispatch:
-    inputs:
-      pr_number:
-        description: Pull request number
-        required: true
+    # inputs:
+    #   pr_number:
+    #     description: Pull request number
+    #     required: true
 
 jobs:
   create-testing-branch:
@@ -13,4 +13,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate pull request number
-        run: echo "hello there ${{ github.event.inputs.pr_number }}"
+        run: echo "hello there"
