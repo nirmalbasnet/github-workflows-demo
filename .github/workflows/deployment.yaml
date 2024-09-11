@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        descripton: Pull request number
+        description: Pull request number
         required: true
 
 jobs:
@@ -20,12 +20,3 @@ jobs:
     steps:
       - name: Validate pull request number
         run: echo "hello there"
-        # uses: actions/github-scripts@v7
-        # id: validate-pr-number
-        # with:
-        #   scripts: >
-        #     const response = await github.rest.pulls.get({
-        #       owner: context.repo.owner,
-        #       repo: context.repo.repo
-        #       pull_number: ${{github.events.inputs.pr_number}}
-        #     })
