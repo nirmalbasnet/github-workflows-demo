@@ -28,5 +28,4 @@ jobs:
               repo: context.repo.repo
               pull_number: ${{github.events.inputs.pr_number}}
             })
-
-        run: echo '${{ toJSON(response) }}'
+            echo '${{ toJSON(response) }}'
