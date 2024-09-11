@@ -25,7 +25,7 @@ jobs:
                 pull_number: ${{ github.event.inputs.pr_number }}, 
               })
               console.log(response)
-              if (response.state !== 'open' || !response.mergeable) {
+              if (response.state !== 'open' || response.mergeable_state === 'blocked') {
                 throw new Error('Either the PR is closed or not in the mergeable state.')
               }
             } catch (err) {
