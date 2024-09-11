@@ -16,8 +16,13 @@ jobs:
         id: get-pull-request
         with:
           script: >
-            github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ github.event.inputs.pr_number }}, 
-            })
+            try {
+              const response = github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: ${{ github.event.inputs.pr_number }}, 
+              })
+              console.log('Response ::', response)
+            } catch (err) {
+              console.log('Error fetching pull :::', err)
+            }
