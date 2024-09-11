@@ -11,12 +11,6 @@ jobs:
   create-testing-branch:
     name: Create testing branch for PR
     runs-on: ubuntu-latest
-    # ====================================================================
-    # Before running the workflow, we must validate the PR number provided
-    # is corrent and belongs to this repository. This step also fetch the
-    # branch name of PR, which will be used in next step to checkout and
-    # deploy the code.
-    # ====================================================================
     steps:
       - name: Validate pull request number
         run: echo "hello there ${{ github.event.inputs.pr_number }}"
