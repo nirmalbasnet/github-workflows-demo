@@ -6,11 +6,23 @@ on:
       pr_number:
         description: Pull Request Number
         required: true
+        type: number
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Get PR title
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ github.event.inputs.pr_number }}
+            });
+            console.log(`Pull Request Title: ${pr.title}`);
+
       - name: Validate PR number
         uses: actions/github-script@v7
         id: get-pull-request
