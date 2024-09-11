@@ -16,4 +16,8 @@ jobs:
         id: get-pull-request
         with:
           script: >
-            console.log(github.event.inputs)
+            github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ github.event.inputs.pr_number }}, 
+            })
