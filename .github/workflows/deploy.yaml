@@ -16,4 +16,4 @@ jobs:
         id: get-pull-request
         with:
           script: >
-            echo '${{toJSON(github.event.inputs)}}'
+            console.log('hello world')
