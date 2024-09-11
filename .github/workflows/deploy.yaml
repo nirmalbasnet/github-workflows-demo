@@ -25,4 +25,5 @@ jobs:
               console.log('Response ::', response)
             } catch (err) {
               console.log('Error fetching pull :::', err)
+              throw new Error('Error fetching pull request')
             }
