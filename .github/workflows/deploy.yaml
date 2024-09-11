@@ -22,7 +22,7 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: ${{ github.event.inputs.pr_number }}, 
               })
-              console.log('Response ::', response)
+               console.log(response)
             } catch (err) {
               console.log('Error fetching pull :::', err)
               throw new Error('Error fetching pull request')
