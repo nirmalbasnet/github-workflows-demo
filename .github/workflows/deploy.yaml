@@ -1,14 +1,18 @@
-name: GG
+name: Deployment to AWS server
 
 on:
   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull Request Number
+        required: true
 
 jobs:
-  gg:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Echo hello world
-        run: echo "Hello World"
+      - name: Validate PR number
+        uses: actions/github-script@v7
+        id: get-pull-request
+        with:
+          script: "${{ toJSON(context) }}"
