@@ -16,4 +16,4 @@ jobs:
         id: get-pull-request
         with:
           script: >
-            console.log('hello world')
+            console.log(github.event.inputs)
