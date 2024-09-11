@@ -1,0 +1,32 @@
+name: Create test server for PR
+
+on:
+  workflow_dispatch:
+  inputs:
+    pr_number:
+      descripton: Pull request number
+      required: true
+
+jobs:
+  create-testing-branch:
+    name: Create testing branch for PR
+    runs-on: ubuntu-latest
+    # ====================================================================
+    # Before running the workflow, we must validate the PR number provided
+    # is corrent and belongs to this repository. This step also fetch the
+    # branch name of PR, which will be used in next step to checkout and
+    # deploy the code.
+    # ====================================================================
+    steps:
+      - name: Validate pull request number
+        uses: actions/github-scripts@v7
+        id: validate-pr-number
+        with:
+          scripts: >
+            const response = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+              pull_number: ${{github.events.inputs.pr_number}}
+            })
+
+        run: echo '${{ toJSON(response) }}'
