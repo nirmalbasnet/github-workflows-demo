@@ -19,4 +19,4 @@ jobs:
     # ====================================================================
     steps:
       - name: Validate pull request number
-        run: echo "hello there"
+        run: echo "hello there ${{ github.event.inputs.pr_number }}"
