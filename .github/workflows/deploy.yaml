@@ -18,9 +18,14 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const { data: response } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ github.event.inputs.pr_number }}, 
-            })
-            console.log(response)
+            try {
+              const { data: response } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: ${{ github.event.inputs.pr_number }}, 
+              })
+              console.log(response)
+            } catch (err) {
+              console.log(err)
+              throw new Error('Error fetching PR details')
+            }
