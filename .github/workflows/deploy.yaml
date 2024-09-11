@@ -37,7 +37,7 @@ jobs:
         id: get-pull-request
         with:
           result-encoding: string
-          script: >
+          script: |
             const response = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
