@@ -58,6 +58,6 @@ jobs:
       #====================================================================
       - name: Echo branch name and terraform version
         needs: [get-pull-request, setup-terraform]
-        runs: |
-          echo ${{ needs.get-pull-request.outputs }}
+        run: |
+          echo ${{ toJSON(needs.get-pull-request) }}
           echo terraform -v
