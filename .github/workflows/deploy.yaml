@@ -9,14 +9,14 @@ on:
         type: number
 
 jobs:
-  deploy:
+  #====================================================================
+  # Validate if the provided PR number is correct.
+  # If validation fails, thorw error and fail the deployment workflow
+  # If everything is OK, send PR branch name to next step
+  #====================================================================
+  validate-pr-number:
     runs-on: ubuntu-latest
     steps:
-      #====================================================================
-      # Validate if the provided PR number is correct.
-      # If validation fails, thorw error and fail the deployment workflow
-      # If everything is OK, send PR branch name to next step
-      #====================================================================
       - name: Validate PR number
         uses: actions/github-script@v7
         id: get-pull-request
@@ -44,18 +44,22 @@ jobs:
               throw new Error('Error fetching PR details')
             }
 
-      #====================================================================
-      # Setup terraform
-      #====================================================================
+  #====================================================================
+  # Setup terraform
+  #====================================================================
+  setup-terraform:
+    steps:
       - name: Setup terraform
         id: setup-terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.7
 
-      #====================================================================
-      # Validate terraform
-      #====================================================================
+  #====================================================================
+  # Validate terraform
+  #====================================================================
+  validate-terraform:
+    steps:
       - name: Echo branch name and terraform version
         needs: [get-pull-request, setup-terraform]
         run: |
