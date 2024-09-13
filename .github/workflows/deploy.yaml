@@ -17,6 +17,8 @@ jobs:
   validate-pr-number:
     name: Validate PR number from input
     runs-on: ubuntu-latest
+    pr-branch: ${{steps.get-pull-request.outputs.pr_branch}}
+    pr-number: ${{steps.get-pull-request.outputs.pr_number}}
     steps:
       - name: Validate PR number
         uses: actions/github-script@v7
@@ -39,7 +41,8 @@ jobs:
                 throw new Error('Either the PR is closed or not in the mergeable state.')
               }
 
-              return response.head.ref
+              echo "pr-branch=$response.head.ref" >> $GITHUB_OUTPUT
+              echo "pr-number=$response.number" >> $GITHUB_OUTPUT
             } catch (err) {
               console.log(err)
               throw new Error('Error fetching PR details')
@@ -68,7 +71,5 @@ jobs:
     steps:
       - name: Echo branch name and terraform version
         run: |
-          echo ${{ toJSON(needs.validate-pr-number) }}
-          echo ${{ toJSON(needs.validate-pr-number.steps.get-pull-request) }}
-          echo ${{ toJSON(needs.validate-pr-number.get-pull-request) }}
+          echo ${{ toJSON(needs.validate-pr-number.outputs) }}
           echo terraform -v
