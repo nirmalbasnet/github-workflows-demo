@@ -64,9 +64,9 @@ jobs:
   validate-terraform:
     name: Validate Terraform
     runs-on: ubuntu-latest
+    needs: [get-pull-request, setup-terraform]
     steps:
       - name: Echo branch name and terraform version
-        needs: [get-pull-request, setup-terraform]
         run: |
           echo ${{ toJSON(needs.get-pull-request) }}
           echo terraform -v
