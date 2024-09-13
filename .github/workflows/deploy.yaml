@@ -75,6 +75,7 @@ jobs:
       - name: Install dependencies and build if no cache hit
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
+          cd ./web
           yarn 
           yarn build
           ls -al
