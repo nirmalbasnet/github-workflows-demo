@@ -12,6 +12,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      #====================================================================
+      # Validate if the provided PR number is correct.
+      # If validation fails, thorw error and fail the deployment workflow
+      # If everything is OK, send PR branch name to next step
+      #====================================================================
       - name: Validate PR number
         uses: actions/github-script@v7
         id: get-pull-request
@@ -24,11 +29,35 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: ${{ github.event.inputs.pr_number }}, 
               })
-              console.log(response)
+              
+              if (response.number !== ${{ github.event.inputs.pr_number }}) {
+                throw new Error('Provided PR number is invalid.')
+              }
+
               if (response.state !== 'open' || response.mergeable_state === 'blocked') {
                 throw new Error('Either the PR is closed or not in the mergeable state.')
               }
+
+              return response.head.ref
             } catch (err) {
               console.log(err)
               throw new Error('Error fetching PR details')
             }
+
+      #====================================================================
+      # Setup terraform
+      #====================================================================
+      - name: Setup terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.7
+
+      #====================================================================
+      # Validate terraform
+      #====================================================================
+      - name: Echo branch name and terraform version
+        needs: [get-pull-request, setup-terraform]
+        runs: |
+          echo ${{ needs.get-pull-request.outputs }}
+          echo terraform -v
