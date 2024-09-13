@@ -17,8 +17,9 @@ jobs:
   validate-pr-number:
     name: Validate PR number from input
     runs-on: ubuntu-latest
-    pr-branch: ${{steps.get-pull-request.outputs.pr_branch}}
-    pr-number: ${{steps.get-pull-request.outputs.pr_number}}
+    outputs:
+      pr-branch: ${{steps.get-pull-request.outputs.pr_branch}}
+      pr-number: ${{steps.get-pull-request.outputs.pr_number}}
     steps:
       - name: Validate PR number
         uses: actions/github-script@v7
