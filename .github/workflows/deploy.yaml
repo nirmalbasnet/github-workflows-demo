@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup terraform
-        run: echo ${{toJSON(github.event)}}
+        run: echo '${{toJSON(github.event)}}'
         # id: setup-terraform
         # uses: hashicorp/setup-terraform@v3
         # with:
