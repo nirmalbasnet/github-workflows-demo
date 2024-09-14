@@ -98,9 +98,13 @@ jobs:
     steps:
       - name: Checkout terraform repository
         env:
-          terraform-repository: ${{github.event.repository.owner}}/terraform-demo
+          terraform-repository: ${{github.event.repository.owner.login}}/terraform-demo
         run: |
-          echo '${{github.event.repository.owner}}'
+          echo '${{github.event.repository.owner.login}}'
+          echo $terraform-repository
+          echo '$terraform-repository'
+          echo $env.terraform-repository
+          echo '$env.terraform-repository'
           echo ${{ env.terraform-repository }}
           echo '${{ env.terraform-repository }}'
 
