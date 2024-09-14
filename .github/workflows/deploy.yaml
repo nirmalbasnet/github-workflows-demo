@@ -96,6 +96,15 @@ jobs:
     name: Setup terraform
     runs-on: ubuntu-latest
     steps:
+      - name: Configure AWS credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region ap-south-1
+
       - name: Checkout terraform repository
         env:
           terraform-repository: ${{github.event.repository.owner.login}}/terraform-demo
@@ -109,8 +118,11 @@ jobs:
         id: cache-terraform
         uses: actions/cache@v4
         with:
-          path: usr/local/bin/terraform
-          key: ${{ runner.os }}-terraform
+          path: |
+            ~/.terraform.d/plugins
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Install terraform
         if: steps.cache-terraform.outputs.cache-hit != 'true'
@@ -120,6 +132,7 @@ jobs:
 
       - name: Verify terraform
         run: |
+          set -e
           terraform version
           which terraform
 
@@ -129,6 +142,7 @@ jobs:
         run: |
           set -e
           terraform init
+          terraform validate
           terraform plan
           terraform apply -auto-approve
           echo "public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
