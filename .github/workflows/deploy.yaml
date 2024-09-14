@@ -101,7 +101,8 @@ jobs:
           terraform-repository: ${{github.event.repository.owner.login}}/terraform-demo
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.terraform-repository }}
+          repository: ${{ env.terraform-repository }}
+          ref: main
 
       # - name: Cache terraform
       #   uses: actions/cache@v3
@@ -117,3 +118,6 @@ jobs:
       - name: Verify terraform
         run: |
           whereis terraform
+          git status
+          terrraform version
+          terraform -v
