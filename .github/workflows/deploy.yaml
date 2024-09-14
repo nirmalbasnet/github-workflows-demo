@@ -103,22 +103,24 @@ jobs:
         with:
           repository: ${{ env.terraform-repository }}
           ref: main
+          path: terraform-repo
 
       - name: Cache terraform
+        id: cache-terraform
         uses: actions/cache@v3
         with:
           path: usr/local/bin/terraform
           key: ${{ runner.os }}-terraform
 
       - name: Install terraform
+        if: steps.cache-terraform.outputs.cache-hit != 'true'
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.5
 
       - name: Verify terraform
-        run: |
-          whereis terraform
-          git remote -v
-          terraform version
-          terraform -v
-          echo ${{ env.TF_VERSION }}
+        run: terraform version
+
+      - name: Checkout create-resource directory in terraform repo
+        working-directory: terraform-repo/create-resource
+        run: ls -al
