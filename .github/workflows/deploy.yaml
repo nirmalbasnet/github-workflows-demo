@@ -99,19 +99,8 @@ jobs:
       - name: Checkout terraform repository
         env:
           terraform-repository: ${{github.event.repository.owner.login}}/terraform-demo
-        run: |
-          echo '${{github.event.repository.owner.login}}'
-          echo $terraform-repository
-          echo '$terraform-repository'
-          echo $env.terraform-repository
-          echo '$env.terraform-repository'
-          echo ${{ env.terraform-repository }}
-          echo '${{ env.terraform-repository }}'
-
-        # uses: actions/checkout@v4
-        # with:
-        #   ref:
-        # id: setup-terraform
-        # uses: hashicorp/setup-terraform@v3
-        # with:
-        #   terraform_version: 1.9.5
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.terraform-repository }}
+          scripts: |
+            git status
