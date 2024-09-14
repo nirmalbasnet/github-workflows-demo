@@ -100,11 +100,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout terraform repository
+        env:
+          terraform-repository: ${{github.event.repository.owner}}/terraform-demo
         run: |
           echo $terraform-repository
           echo '$terraform-repository'
           echo ${{ env.terraform-repository }}
           echo '${{ env.terraform-repository }}'
+
         # uses: actions/checkout@v4
         # with:
         #   ref:
