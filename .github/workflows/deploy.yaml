@@ -102,5 +102,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ env.terraform-repository }}
-          script: |
-            git status
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Verify terraform
+        run: |
+          git status
+          terraform version
