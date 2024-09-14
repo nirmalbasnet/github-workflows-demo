@@ -8,9 +8,6 @@ on:
         required: true
         type: number
 
-env:
-  terraform-repository: ${{github.event.repository.owner}}/terraform-demo
-
 jobs:
   #====================================================================
   # Validate if the provided PR number is correct.
@@ -103,8 +100,7 @@ jobs:
         env:
           terraform-repository: ${{github.event.repository.owner}}/terraform-demo
         run: |
-          echo $terraform-repository
-          echo '$terraform-repository'
+          echo '${{github.event.repository.owner}}'
           echo ${{ env.terraform-repository }}
           echo '${{ env.terraform-repository }}'
 
