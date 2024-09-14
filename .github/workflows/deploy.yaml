@@ -167,5 +167,5 @@ jobs:
     needs: [setup-terraform, build]
 
     steps:
-      - name: Configure ssh
+      - name: Configure ssh agent
         run: echo "${{ needs.setup-terraform.outputs.public-ip }}"
