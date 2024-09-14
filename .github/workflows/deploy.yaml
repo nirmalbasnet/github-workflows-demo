@@ -103,6 +103,12 @@ jobs:
         with:
           ref: ${{ env.terraform-repository }}
 
+      # - name: Cache terraform
+      #   uses: actions/cache@v3
+      #   with:
+      #     path:
+      #     key: ${{ runner.os }}-terraform
+
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -110,5 +116,4 @@ jobs:
 
       - name: Verify terraform
         run: |
-          git status
-          terraform version
+          whereis terraform
