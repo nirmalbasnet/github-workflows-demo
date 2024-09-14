@@ -99,8 +99,15 @@ jobs:
     name: Setup terraform
     runs-on: ubuntu-latest
     steps:
-      - name: Setup terraform
-        run: echo '${{toJSON(github.event)}}'
+      - name: Checkout terraform repository
+        run: |
+          echo $terraform-repository
+          echo '$terraform-repository'
+          echo ${{ env.terraform-repository }}
+          echo '${{ env.terraform-repository }}'
+        # uses: actions/checkout@v4
+        # with:
+        #   ref:
         # id: setup-terraform
         # uses: hashicorp/setup-terraform@v3
         # with:
