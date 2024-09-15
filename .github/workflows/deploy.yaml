@@ -167,13 +167,13 @@ jobs:
         run:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
 
-          sudo dnf update -y
           sudo dnf install -y nodejs
+
           sudo npm install -g yarn
 
           mkdir -p app
 
-          scp . /home/ec2-user/app
+          scp package.json yarn.lock /home/ec2-user/app/
 
           cd app
           yarn
