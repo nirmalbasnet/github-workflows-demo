@@ -113,7 +113,7 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::827040639836:role/gh-workflow-deployments
+          role-to-assume: arn:aws:iam::${{ secrets.IAM_ID }}:role/gh-workflow-deployments
           aws-region: ap-south-1
 
       - name: Execute terraform
@@ -167,15 +167,23 @@ jobs:
         run:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
 
+          echo '=========== CURL'
+
+          curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+
+          ececho '=========== NODE'
+
           sudo dnf install -y nodejs
 
-          sudo npm install -g yarn
+          echo '=========== YARN'
 
-          mkdir -p app
+          sudo npm install -g yarn
 
           cd app
 
           yarn
+
+          yarn build
 
           yarn start:prod
 
