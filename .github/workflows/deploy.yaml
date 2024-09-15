@@ -57,13 +57,14 @@ jobs:
     defaults:
       run:
         working-directory: ./web/
+
     steps:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           path: |
-            web/package.json
-            web/yarn.lock
+            package.json
+            yarn.lock
 
   #====================================================================
   # Setup terraform with version 1.9.5
