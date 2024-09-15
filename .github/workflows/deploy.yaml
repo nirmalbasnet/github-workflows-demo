@@ -59,7 +59,7 @@ jobs:
         working-directory: web
 
     steps:
-      - name: Checkout the branch for validate-pr-number job
+      - name: Checkout the PR branch 
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.validate-pr-number.outputs.pr-branch }}
@@ -168,15 +168,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
 
           sudo dnf update -y
-
-          echo 'Installing node'
-          curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
           sudo dnf install -y nodejs
-          node -v
-
-          echo 'Installing yarn'
           sudo npm install -g yarn
-          yarn -v
 
           mkdir -p app
 
