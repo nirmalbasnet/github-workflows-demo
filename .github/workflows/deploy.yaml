@@ -165,23 +165,36 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: SSH ec2 instance
+      - name: Install node and yarn
         run:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
 
           sudo dnf update -y
 
-          echo 'Check if node installed'
-          if ! which node > /dev/null 2>&1; then
           echo 'Installing node'
           curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
           sudo dnf install -y nodejs
           node -v
 
-          echo 'Check if yarn installed'
-          if ! which yarn > /dev/null 2>&1; then
           echo 'Installing yarn'
           sudo npm install -g yarn
           yarn -v
 
+          mkdir -p app
+
           EOF
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.ec2-instance-public-id }}
+          username: ec2-user
+          port: 22
+          key: ${{ secrets.SSH_KEY }}
+          source: "package.json,yarn.lock. dist"
+          target: /home/ec2-user/app
