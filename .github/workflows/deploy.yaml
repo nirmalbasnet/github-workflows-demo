@@ -94,18 +94,16 @@ jobs:
   # Configure AWS
   #====================================================================
   configue-aws:
-    name: Setup aws cli
+    name: Configure access to AWS
     runs-on: ubuntu-latest
-    environment: test
-    env:
-      AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+    permissions:
+      id-token: write # This is required for requesting the JWT
     steps:
-      - name: Configure AWS credentials
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region ap-south-1
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::827040639836:role/gh-workflow-deployments
+          aws-region: ap-south-1
 
   #====================================================================
   # Setup terraform with version 1.9.5
