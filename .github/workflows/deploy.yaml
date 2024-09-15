@@ -70,6 +70,11 @@ jobs:
       - name: ls
         run: ls -al
 
+      - name: Set up node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
       - name: Install dep and build
         run: |
           yarn
