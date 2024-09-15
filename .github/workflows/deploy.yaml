@@ -56,7 +56,7 @@ jobs:
     needs: validate-pr-number
     defaults:
       run:
-        working-directory: web
+        working-directory: /web
 
     steps:
       - name: ls
