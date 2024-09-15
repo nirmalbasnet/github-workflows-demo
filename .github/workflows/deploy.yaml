@@ -73,9 +73,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ~/.cache/yarn
             node_modules
-            build
+            dist
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies if no cache hit
