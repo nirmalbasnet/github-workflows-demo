@@ -59,6 +59,11 @@ jobs:
         working-directory: web
 
     steps:
+      - name: Checkout the branch for validate-pr-number job
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-pr-number.outputs.pr-branch }}
+
       - name: pwd
         run: pwd
 
