@@ -166,20 +166,22 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: SSH ec2 instance
-        run: ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }}
+        run:
+          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-public-dns << 'EOF'
 
-      - name: Update package manager
-        run: sudo dnf update
+          sudo dnf update -y
 
-      - name: Setup node if not already installed
-        run: |
+          echo 'Check if node installed'
           if ! which node > /dev/null 2>&1; then
+          echo 'Installing node'
           curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
           sudo dnf install -y nodejs
           node -v
 
-      - name: Setup yarn if not already installed
-        run: |
+          echo 'Check if yarn installed'
           if ! which yarn > /dev/null 2>&1; then
+          echo 'Installing yarn'
           sudo npm install -g yarn
           yarn -v
+
+          EOF
