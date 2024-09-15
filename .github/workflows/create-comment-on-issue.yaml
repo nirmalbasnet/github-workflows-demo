@@ -2,7 +2,7 @@ name: Create comment on issue
 
 on:
   issues:
-    type:
+    types:
       - opened
 
 permissions:

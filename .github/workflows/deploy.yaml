@@ -6,18 +6,198 @@ on:
       pr_number:
         description: Pull Request Number
         required: true
+        type: number
 
 jobs:
-  deploy:
+  #====================================================================
+  # Validate if the provided PR number is correct.
+  # If validation fails, thorw error and fail the deployment workflow
+  # If everything is OK, send PR branch name to next step
+  #====================================================================
+  validate-pr-number:
+    name: Validate PR number from input
     runs-on: ubuntu-latest
+    outputs:
+      pr-branch: ${{steps.get-pull-request.outputs.result}}
     steps:
       - name: Validate PR number
         uses: actions/github-script@v7
         id: get-pull-request
         with:
-          script: >
-            github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ github.event.inputs.pr_number }}, 
-            })
+          result-encoding: string
+          script: |
+            try {
+              const { data: response } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: ${{ github.event.inputs.pr_number }}, 
+              })
+              
+              if (response.number !== ${{ github.event.inputs.pr_number }}) {
+                throw new Error('Provided PR number is invalid.')
+              }
+
+              if (response.state !== 'open' || response.mergeable_state === 'blocked') {
+                throw new Error('Either the PR is closed or not in the mergeable state.')
+              }
+              
+              return response.head.ref
+            } catch (err) {
+              console.log(err)
+              throw new Error('Error fetching PR details')
+            }
+
+  #====================================================================
+  # Install dependencies and cache
+  #====================================================================
+  upload-artifact:
+    name: Upload project artifact
+    runs-on: ubuntu-latest
+    needs: validate-pr-number
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - name: Checkout the PR branch 
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-pr-number.outputs.pr-branch }}
+
+      - name: pwd
+        run: pwd
+
+      - name: ls
+        run: ls -al
+
+      - name: Set up node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dep and build
+        run: |
+          yarn
+          yarn build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            web/package.json
+            web/yarn.lock
+            web/dist
+            web/src/views
+            web/public
+            
+          if-no-files-found: error
+
+  #====================================================================
+  # Setup terraform with version 1.9.5
+  #====================================================================
+  setup-terraform:
+    name: Setup terraform
+    runs-on: ubuntu-latest
+    needs: upload-artifact
+    environment: test
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+      - name: Checkout terraform repository
+        env:
+          terraform-repository: ${{github.event.repository.owner.login}}/terraform-demo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.terraform-repository }}
+          ref: main
+          path: terraform-repo
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Verify terraform
+        run: |
+          set -e
+          terraform version
+          which terraform
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.IAM_ID }}:role/gh-workflow-deployments
+          aws-region: ap-south-1
+
+      - name: Execute terraform
+        id: apply-terraform
+        working-directory: terraform-repo/create-resource
+        run: |
+          set -e
+          terraform init
+          terraform validate
+          terraform plan
+          terraform apply -auto-approve
+          echo "ec2_public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_ENV
+          echo "ec2_public_dns=$(terraform output -raw instance_public_dns)" >> $GITHUB_ENV
+
+    outputs:
+      ec2_public_ip: "${{ env.ec2_public_ip }}"
+
+  #====================================================================
+  # Configure ec2 instance returned for previous job
+  #====================================================================
+  configure-ec2-instance:
+    name: Configure ec2 instance
+    runs-on: ubuntu-latest
+    needs: setup-terraform
+    environment: test
+    env:
+      ec2-instance-public-id: "${{ needs.setup-terraform.outputs.ec2_public_ip }}"
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.ec2-instance-public-id }}
+          username: ec2-user
+          port: 22
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: /home/ec2-user/app
+
+      - name: Configure ssh agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Install node and yarn
+        run:
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
+
+          echo '=========== CURL'
+
+          curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+
+          echo '=========== NODE'
+
+          sudo dnf install -y nodejs
+
+          echo '=========== YARN'
+
+          sudo npm install -g yarn
+
+          cd app
+
+          yarn
+
+          nohup yarn start:prod > app.log 2>&1 &
+
+          EOF
+
+      

@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "nodemon main.js",
-    "start:build": "yarn build && node dist/bundle.cjs",
+    "start:dev": "nodemon main.js",
+    "start:prod": "node dist/bundle.cjs",
     "test": "jest --coverage",
     "lint": "eslint . --max-warnings=0 --fix"
   },
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "jade": "^1.11.0"
+    "jade": "1.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
