@@ -56,6 +56,9 @@ jobs:
     needs: validate-pr-number
 
     steps:
+      - name: pwd
+        run: pwd
+
       - name: ls
         run: ls -al
 
@@ -65,6 +68,8 @@ jobs:
           path: |
             web/package.json
             web/yarn.lock
+            
+          if-no-files-found: error
 
   #====================================================================
   # Setup terraform with version 1.9.5
