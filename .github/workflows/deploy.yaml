@@ -91,9 +91,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: |
-            package.json
-            yarn.lock
-            dist/
+            web/package.json
+            web/yarn.lock
+            web/dist
 
   #====================================================================
   # Setup terraform with version 1.9.5
