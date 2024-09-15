@@ -75,11 +75,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies and build if no cache hit
+      - name: Install dependencies if no cache hit
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: |
-          yarn 
-          yarn build
+        run: yarn
+
+      - name: Build the app
+        run: yarn build
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -88,24 +89,6 @@ jobs:
             package.json
             yarn.lock
             dist/
-
-      - name: List directory
-        run: ls -al
-
-  #====================================================================
-  # Configure AWS
-  #====================================================================
-  # configure-aws:
-  #   name: Configure access to AWS
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write # This is required for requesting the JWT
-  #   steps:
-  #     - name: Configure aws credentials
-  #       uses: aws-actions/configure-aws-credentials@v3
-  #       with:
-  #         role-to-assume: arn:aws:iam::827040639836:role/gh-workflow-deployments
-  #         aws-region: ap-south-1
 
   #====================================================================
   # Setup terraform with version 1.9.5
@@ -151,10 +134,12 @@ jobs:
           terraform validate
           terraform plan
           terraform apply -auto-approve
-          echo "public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_ENV
+          echo "ec2_public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_ENV
+          echo "ec2_public_dns=$(terraform output -raw instance_public_dns)" >> $GITHUB_ENV
 
     outputs:
-      public-ip: ${{ steps.apply-terraform.outputs.public_ip }}
+      ec2_public_ip: "${{ env.ec2_public_ip }}"
+      ec2_public_dns: "${{ env.ec2_public_dns }}"
 
   #====================================================================
   # Configure ec2 instance returned for previous job
@@ -166,4 +151,6 @@ jobs:
 
     steps:
       - name: Configure ssh agent
-        run: echo "${{ needs.setup-terraform.outputs.public-ip }}"
+        run: |
+          echo "${{ needs.setup-terraform.outputs.ec2_public_ip }}"
+          echo "${{ needs.setup-terraform.outputs.ec2_public_dns }}"
