@@ -87,6 +87,8 @@ jobs:
             web/package.json
             web/yarn.lock
             web/dist
+            web/src/views
+            web/public
             
           if-no-files-found: error
 
