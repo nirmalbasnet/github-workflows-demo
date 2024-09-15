@@ -59,6 +59,8 @@ jobs:
         working-directory: ./web/
 
     steps:
+      - name: ls
+        run: ls -al
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
