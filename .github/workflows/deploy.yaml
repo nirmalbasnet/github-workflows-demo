@@ -79,9 +79,13 @@ jobs:
 
       - name: Install dependencies if no cache hit
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: yarn
+
+      - name: Build project if no cache hit
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
-          yarn
           yarn build
+          ls -al
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
