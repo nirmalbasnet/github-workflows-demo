@@ -167,7 +167,7 @@ jobs:
 
       - name: SSH ec2 instance
         run:
-          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-public-dns << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }} << 'EOF'
 
           sudo dnf update -y
 
