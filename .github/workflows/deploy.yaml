@@ -102,6 +102,7 @@ jobs:
     name: Setup terraform
     runs-on: ubuntu-latest
     needs: build
+    environment: test
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -154,9 +155,31 @@ jobs:
     name: Configure ec2 instance
     runs-on: ubuntu-latest
     needs: setup-terraform
+    environment: test
+    env:
+      ec2-instance-public-id: "${{ needs.setup-terraform.outputs.ec2_public_ip }}"
 
     steps:
       - name: Configure ssh agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: SSH ec2 instance
+        run: ssh -o StrictHostKeyChecking=no ec2-user@${{ env.ec2-instance-public-id }}
+
+      - name: Update package manager
+        run: sudo dnf update
+
+      - name: Setup node if not already installed
         run: |
-          echo "${{ needs.setup-terraform.outputs.ec2_public_ip }}"
-          echo "${{ needs.setup-terraform.outputs.ec2_public_dns }}"
+          if ! which node > /dev/null 2>&1; then
+          curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+          sudo dnf install -y nodejs
+          node -v
+
+      - name: Setup yarn if not already installed
+        run: |
+          if ! which yarn > /dev/null 2>&1; then
+          sudo npm install -g yarn
+          yarn -v

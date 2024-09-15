@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "nodemon main.js",
-    "start:build": "yarn build && node dist/bundle.cjs",
+    "start:dev": "nodemon main.js",
+    "start:prod": "node dist/bundle.cjs",
     "test": "jest --coverage",
     "lint": "eslint . --max-warnings=0 --fix"
   },
