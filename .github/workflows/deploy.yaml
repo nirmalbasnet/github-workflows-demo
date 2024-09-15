@@ -63,24 +63,26 @@ jobs:
         with:
           ref: ${{ needs.validate-pr-number.outputs.pr-branch }}
 
-      - name: Cache node modules
-        id: cache-dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+            node_modules
+            build
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install dependencies if no cache hit
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: yarn
-
-      - name: Build the app
-        run: yarn build
+        run: |
+          yarn
+          yarn build
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -96,6 +98,7 @@ jobs:
   setup-terraform:
     name: Setup terraform
     runs-on: ubuntu-latest
+    needs: build
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
