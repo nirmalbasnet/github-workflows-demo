@@ -70,12 +70,18 @@ jobs:
       - name: ls
         run: ls -al
 
+      - name: Install dep and build
+        run: |
+          yarn
+          yarn build
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           path: |
             web/package.json
             web/yarn.lock
+            web/dist
             
           if-no-files-found: error
 
@@ -182,8 +188,6 @@ jobs:
           cd app
 
           yarn
-
-          yarn build
 
           yarn start:prod
 
