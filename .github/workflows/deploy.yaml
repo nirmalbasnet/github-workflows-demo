@@ -148,15 +148,15 @@ jobs:
         with:
           name: artifact
 
-      # - name: copy file via ssh key
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ env.ec2-instance-public-id }}
-      #     username: ec2-user
-      #     port: 22
-      #     key: ${{ secrets.SSH_KEY }}
-      #     source: "."
-      #     target: /home/ec2-user/app
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.ec2-instance-public-id }}
+          username: ec2-user
+          port: 22
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: /home/ec2-user/app
 
       - name: Configure ssh agent
         uses: webfactory/ssh-agent@v0.9.0
@@ -173,10 +173,10 @@ jobs:
 
           mkdir -p app
 
-          scp package.json yarn.lock /home/ec2-user/app/
-
           cd app
+
           yarn
+
           yarn start:prod
 
           EOF
